@@ -1,0 +1,11 @@
+## Ignore files
+
+# Ignore PyDev IDE files
+.*project
+
+# Ignore test folders
+test/
+
+# Ignore folders with compiled python files
+__pycache__/
+
