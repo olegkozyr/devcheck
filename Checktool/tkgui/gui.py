@@ -31,7 +31,11 @@ class FrameFunc(tk.Frame):
         self.pack(side=tk.TOP)
         self._make_widgets()
 
-    def _make_widgets(self):                        
+    def _make_widgets(self):  
+        #Button starts data produsing and displaing                      
+        tk.Button(self, text='Start', command=self._quit).pack(side=tk.TOP)
+        
+        # Button to quits application
         tk.Button(self, text='Quit', command=self._quit).pack(side=tk.TOP)
 
     def _quit(self):
