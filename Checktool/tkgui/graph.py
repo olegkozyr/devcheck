@@ -41,22 +41,30 @@ class MainGraph(MplGraph):
     """
     
     def __init__(self, parent, packSettings, interval=None, **kwargs):
-        MplGraph.__init__(self, parent, packSettings, **kwargs)
-        self.update_figure()
+        MplGraph.__init__(self, parent, packSettings, **kwargs)        
         self._tkcanvas.pack(packSettings)
-        timer = TimerTk(parent)
-        timer.add_callback(self.update_figure)
-        timer.start(interval)
-    
-    def _initialize_figure(self):
-        self.axes.plot([0], [0], 'r')
+        self.interval = interval
+        self.data = (np.linspace(0, 1, 100), np.linspace(0, 1, 100))
+        self._update_figure()
+        self.timer = TimerTk(parent)
+        self.timer.add_callback(self._update_figure)
+        self.timerOn = False
+        
+    def put_data(self, data):
+        self.data = data
+        #print(self.data)
 
-    def update_figure(self):
-        t = np.arange(0.0, 3.0, 0.01)
-        s = np.sin(2*np.pi*t)
-        l = np.random.rand(t.shape[0]) - 0.5
+    def view_handling(self):
+        if self.timerOn:
+            self.timer.stop()
+            self.timerOn = False
+        else:
+            self.timer.start(self.interval)
+            self.timerOn = True
+        
+    def _update_figure(self):
         self.axes.cla()
-        self.axes.plot(t, s+l, 'r')
+        self.axes.plot(*self.data, 'r')
         self.draw()
         
 #######################################################################
