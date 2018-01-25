@@ -12,13 +12,14 @@ class FrameGraph(tk.Frame):
     """
     Frame with canvas
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, interval=None):
         tk.Frame.__init__(self, parent)
         self.pack(gconst.packSettings)
+        self.interval = interval
         self._make_widgets()
         
     def _make_widgets(self):
-        gr.MainGraph(self, gconst.packSettings)
+        gr.MainGraph(self, gconst.packSettings, self.interval)
                  
 
 class FrameFunc(tk.Frame):
@@ -41,12 +42,13 @@ class MainWindow(tk.Frame):
     """
     Main window
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, interval=None):
         tk.Frame.__init__(self, parent)
         self.pack(gconst.packSettings)
+        self.interval = interval
         self._make_widgets()
         
     def _make_widgets(self):   
-        FrameGraph(self).pack(gconst.packSettings) 
+        FrameGraph(self, self.interval).pack(gconst.packSettings) 
         FrameFunc(self).pack(side=tk.TOP) 
         

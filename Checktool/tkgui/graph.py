@@ -18,7 +18,7 @@ class MplGraph(FigureCanvas):
     Prepare graph canvas
     """
     
-    def __init__(self, parent=None, packSettings=None, width=5, height=4, dpi=100):
+    def __init__(self, parent, packSettings, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         
@@ -40,13 +40,13 @@ class MainGraph(MplGraph):
     Create dynamic figure that display.
     """
     
-    def __init__(self, parent=None, packSettings=None, **kwargs):
+    def __init__(self, parent, packSettings, interval=None, **kwargs):
         MplGraph.__init__(self, parent, packSettings, **kwargs)
         self.update_figure()
         self._tkcanvas.pack(packSettings)
         timer = TimerTk(parent)
         timer.add_callback(self.update_figure)
-        timer.start(100)
+        timer.start(interval)
     
     def _initialize_figure(self):
         self.axes.plot([0], [0], 'r')
