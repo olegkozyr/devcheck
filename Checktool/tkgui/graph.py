@@ -44,7 +44,7 @@ class MainGraph(MplGraph):
         MplGraph.__init__(self, parent, packSettings, **kwargs)        
         self._tkcanvas.pack(packSettings)
         self.interval = interval
-        self.data = (np.linspace(0, 1, 100), np.linspace(0, 1, 100))
+        self.data = np.linspace(0, 1, 1000)
         self._update_figure()
         self.timer = TimerTk(parent)
         self.timer.add_callback(self._update_figure)
@@ -64,7 +64,7 @@ class MainGraph(MplGraph):
         
     def _update_figure(self):
         self.axes.cla()
-        self.axes.plot(*self.data, 'r')
+        self.axes.plot(self.data, 'r')
         self.draw()
         
 #######################################################################

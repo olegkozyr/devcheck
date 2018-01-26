@@ -65,7 +65,7 @@ class FrameFunc(tk.Frame):
         t = np.arange(0.0, 3.0, 0.01)
         s = np.sin(2*np.pi*t)
         l = np.random.rand(t.shape[0]) - 0.5
-        self.graph.put_data((t, l+s))
+        self.graph.put_data(l+s)
         self.generationID = self.after(1000, self._data_func)
             
 class MainWindow(tk.Frame):
