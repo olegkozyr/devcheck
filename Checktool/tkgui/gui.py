@@ -6,31 +6,34 @@ Gui module to build app windows
 # GUI module
 import tkinter as tk
 import tkgui.graph as gr
-import tkgui.gui_constants as gconst
+import tkgui.gui_constants as gc
 import numpy as np
+
+import _thread, queue, time
 
 class FrameGraph(tk.Frame):
     """
     Frame with canvas
     """
-    def __init__(self, parent=None, interval=None):
+    def __init__(self, parent, dataQueue, interval):
         tk.Frame.__init__(self, parent)
-        self.pack(gconst.packSettings)
+        self.pack(gc.packSettings)
         self.interval = interval
-        self._make_widgets()
+        self._make_widgets(dataQueue)
         
-    def _make_widgets(self):
-        self.mainGraph = gr.MainGraph(self, gconst.packSettings, self.interval)
+    def _make_widgets(self, dataQueue):
+        self.mainGraph = gr.MainGraph(self, dataQueue, self.interval)
                  
 
 class FrameFunc(tk.Frame):
     """
     Frame with button for quit app.
     """
-    def __init__(self, parent, graph):
+    def __init__(self, parent, graph, dataQueue):
         tk.Frame.__init__(self, parent)
         self.pack(side=tk.TOP)
         self.graph = graph
+        self.dataQueue = dataQueue
         self.generationID = None
         self._make_widgets()
 
@@ -48,40 +51,44 @@ class FrameFunc(tk.Frame):
     def start_generation(self):
         self.graph.view_handling()
         self._generation_handling()
-        
-        
+                
     def _generation_handling(self):
         if self.generationID:
             self.after_cancel(self.generationID)
             self.generationID = None
+            print(self.dataQueue._qsize())
         else:
             self._data_func()          
             
-
     def _data_func(self):
         """
         Generate data.
         """
-        t = np.arange(0.0, 3.0, 0.01)
-        s = np.sin(2*np.pi*t)
-        l = np.random.rand(t.shape[0]) - 0.5
-        self.graph.put_data(l+s)
-        self.generationID = self.after(1000, self._data_func)
+        f = 250
+        n = 100 
+        dt = 1.0/(f*n)
+        t = np.arange(0.0, 0.004, dt)
+        s = np.sin(2*np.pi*250*t)
+        l = np.random.rand(t.shape[0]) - 0.5 + s
+        self.dataQueue.put(l)
+        self.generationID = self.after(50, self._data_func)
             
 class MainWindow(tk.Frame):
     """
     Main window
     """
-    def __init__(self, parent=None, interval=None):
+    def __init__(self, parent, interval):
         tk.Frame.__init__(self, parent)
-        self.pack(gconst.packSettings)
-        self.interval = interval
-        self._make_widgets()
+        self.pack(gc.packSettings)
         
-    def _make_widgets(self):   
-        graph = FrameGraph(self, self.interval)
-        graph.pack(gconst.packSettings) 
-        FrameFunc(self, graph.mainGraph).pack(side=tk.TOP) 
+        self.dataQueue = queue.Queue() 
+        self.dataQueue.put(np.zeros(100))
+        self._make_widgets(interval)
+        
+    def _make_widgets(self, interval):   
+        frameGraph = FrameGraph(self, self.dataQueue, interval)
+        frameGraph.pack(gc.packSettings) 
+        FrameFunc(self, frameGraph.mainGraph, self.dataQueue).pack(side=tk.TOP) 
         
         
         
