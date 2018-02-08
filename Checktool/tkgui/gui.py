@@ -9,7 +9,7 @@ import tkgui.graph as gr
 import tkgui.gui_constants as gc
 import numpy as np
 
-import _thread, queue, time
+import threading, queue, time
 
 class FrameGraph(tk.Frame):
     """
