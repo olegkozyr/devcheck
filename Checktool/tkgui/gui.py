@@ -11,6 +11,34 @@ import numpy as np
 
 import threading, queue, time
 
+class ProducerThread(threading.Thread):
+    def __init__(self, dataQueue):
+        self.running = True
+        self.dataQueue = dataQueue
+        threading.Thread.__init__(self)
+
+    def run(self):
+        """
+        Override threading.Thread.run(self)
+        Generate data.
+        """
+        """
+        Generate data.
+        """
+        f = 250
+        n = 100 
+        dt = 1.0/(f*n)
+        t = np.arange(0.0, 0.004, dt)
+        s = np.sin(2*np.pi*250*t) 
+        while self.running:
+            l = np.random.rand(t.shape[0]) - 0.5 + s
+            self.dataQueue.put(l)
+            print('thread working')
+            time.sleep(0.2)
+    
+    def stop(self):
+        self.running = False
+
 class FrameGraph(tk.Frame):
     """
     Frame with canvas
@@ -34,7 +62,7 @@ class FrameFunc(tk.Frame):
         self.pack(side=tk.TOP)
         self.graph = graph
         self.dataQueue = dataQueue
-        self.generationID = None
+        self.dataThread = None
         self._make_widgets()
 
     def _make_widgets(self):  
@@ -53,25 +81,14 @@ class FrameFunc(tk.Frame):
         self._generation_handling()
                 
     def _generation_handling(self):
-        if self.generationID:
-            self.after_cancel(self.generationID)
-            self.generationID = None
+        if self.dataThread:
+            self.dataThread.stop()
+            self.dataThread.join()
+            self.dataThread = None
             print(self.dataQueue._qsize())
-        else:
-            self._data_func()          
-            
-    def _data_func(self):
-        """
-        Generate data.
-        """
-        f = 250
-        n = 100 
-        dt = 1.0/(f*n)
-        t = np.arange(0.0, 0.004, dt)
-        s = np.sin(2*np.pi*250*t)
-        l = np.random.rand(t.shape[0]) - 0.5 + s
-        self.dataQueue.put(l)
-        self.generationID = self.after(50, self._data_func)
+        else:            
+            self.dataThread = ProducerThread(self.dataQueue)
+            self.dataThread.start()       
             
 class MainWindow(tk.Frame):
     """
