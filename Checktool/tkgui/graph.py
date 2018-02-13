@@ -35,18 +35,12 @@ class MainGraph(FigureCanvasTkAgg):
         self.get_tk_widget().pack(gc.packSettings)
         self._tkcanvas.pack(gc.packSettings)
         self.interval = interval        
-        self._update_figure()
         self.timer = TimerTk(parent)
         self.timer.add_callback(self._update_figure)
         self.timerOn = False
  
     def _initialize_figure(self):
-        try:
-            data = self.dataQueue.get(block=False)
-        except queue.Empty:
-            pass
-        else:
-            self.line, = self.axes.plot(data)
+        self.line, = self.axes.plot(np.zeros(100))
         
         self.axes.set_ylim(-1.1, 1.1)
         self.axes.set_xlim(-0.1, 100.1)
@@ -54,9 +48,11 @@ class MainGraph(FigureCanvasTkAgg):
     def view_handling(self):
         if self.timerOn:
             self.timer.stop()
+            print(self.timerOn)
             self.timerOn = False
         else:
             self.timer.start(self.interval)
+            print(self.timerOn)
             self.timerOn = True
         
     def _update_figure(self):
@@ -74,6 +70,7 @@ class MainGraph(FigureCanvasTkAgg):
             #self.fig.canvas.update()
             self.draw()
             self.fig.canvas.flush_events()
+        print('Plot')
         
 #######################################################################
 #--------------------------------------------------

@@ -22,9 +22,7 @@ class ProducerThread(threading.Thread):
         Override threading.Thread.run(self)
         Generate data.
         """
-        """
-        Generate data.
-        """
+
         f = 250
         n = 100 
         dt = 1.0/(f*n)
@@ -99,7 +97,6 @@ class MainWindow(tk.Frame):
         self.pack(gc.packSettings)
         
         self.dataQueue = queue.Queue() 
-        self.dataQueue.put(np.zeros(100))
         self._make_widgets(interval)
         
     def _make_widgets(self, interval):   
