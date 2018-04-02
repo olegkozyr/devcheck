@@ -1,3 +1,4 @@
 #1
 -The MainGraph is still plotting even after Timer.Stop() executed.
 TODO: Delete graph timer and update graph in frame.
+SOLVED:

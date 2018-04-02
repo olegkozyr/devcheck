@@ -33,9 +33,10 @@ class MainGraph(FigureCanvasTkAgg):
         self._tkcanvas.pack(gc.packSettings)     
  
     def _initialize_figure(self):
-        self.line, = self.axes.plot(np.arange(0, 1, 0.01), np.zeros(100))
+        self.line, = self.axes.plot(np.zeros(100))
         self.axes.set_xlim(-0.1, 1.1)
         self.axes.set_ylim(-1.1, 1.1)
+        self.axes.grid()
         
     def update_figure(self, data):
         #self.axes.cla()

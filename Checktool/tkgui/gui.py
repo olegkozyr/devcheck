@@ -31,6 +31,7 @@ class ProducerThread(threading.Thread):
         while self.running:
             l = np.random.rand(t.shape[0]) - 0.5 + s
             self.dataQueue.put(l)
+            print('Thread is working')
             time.sleep(0.2)
     
     def stop(self):
@@ -67,6 +68,7 @@ class FrameGraph(tk.Frame):
             pass
         else:   
             self.mainGraph.update_figure(data)
+            print('Plotting')
         if self.isPlotting:
             self.after(self.interval, self.plot)
 
