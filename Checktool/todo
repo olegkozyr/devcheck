@@ -2,3 +2,10 @@
 -The MainGraph is still plotting even after Timer.Stop() executed.
 TODO: Delete graph timer and update graph in frame.
 SOLVED:
+#2
+- On Linux the window's width is too big.
+TODO: Make window's start width small enough.
+
+#3
+- Graph displays only small chunk of the signal.
+TODO:
