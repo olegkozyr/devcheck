@@ -3,8 +3,7 @@ Modules for graphs
 """
 import matplotlib
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, \
-                                              TimerTk                             
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg                             
 # implement the default mpl key bindings
 from matplotlib.figure import Figure
 
